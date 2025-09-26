@@ -14,3 +14,7 @@ https://servicodados.ibge.gov.br/api/docs/nomes?versao=2
 ```shell
 streamlit run ./miniprojeto_webapp.py
 ```
+
+## Moludo OpenAI
+
+https://github.com/openai/openai-python
