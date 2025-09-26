@@ -8,3 +8,9 @@ https://servicodados.ibge.gov.br/api/docs/
 https://servicodados.ibge.gov.br/api/docs/nomes?versao=2
 
 
+## Streamlit
+
+### Executar arquivo
+```shell
+streamlit run ./miniprojeto_webapp.py
+```
