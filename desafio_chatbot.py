@@ -1,13 +1,11 @@
 import openai
-from pprint import pprint
-from openai import api_key
 from dotenv import load_dotenv, find_dotenv
 
-#carrega a chave OPENAI_API_KEY
 _ = load_dotenv(find_dotenv())
 
 #inicializa o client
 client = openai.Client()
+
 
 def geracao_texto(mensagens, model="gpt-3.5-turbo-0125", max_tokens=1000, temperature=0):
     resposta = client.chat.completions.create(
@@ -17,21 +15,26 @@ def geracao_texto(mensagens, model="gpt-3.5-turbo-0125", max_tokens=1000, temper
         temperature=temperature,
         stream=True  # TEM A FUNÇÃO DE RETURNAR IN INTERRADOR COM O RETORNO DE CADA PEDAÇO DO TEXTO
     )
-    # COM STREAM A RESPOSTA NAO PODE SER ACESSADA PELO CHOICES
-    #print(resposta.choices[0].message.content)
-    #print('consumo ', resposta.usage)
-    resposta_completa = ''
+    print("Assistent: ", end='')
+    texto_completo = ''
     for strema_resposta in resposta:
         texto = strema_resposta.choices[0].delta.content
         if texto:
-            resposta_completa += texto
             print(texto, end='')
-    mensagens.append({'role': 'assistant', 'content': resposta_completa})
-    return resposta_completa
+            texto_completo += texto
+    print()
+    mensagens.append({'role': 'assistant', 'content': texto_completo})
+    return mensagens
 
 
-mensagens = [{"role": "user", "content": "Crie uma história sobre uma viagem a marte"}]
-#chama o modelo
-mensagens = geracao_texto(mensagens=mensagens)
-print('Resposta completa /n')
-pprint(mensagens)
+if __name__ == '__main__':
+    print('Bem vindo ao chatbot com python da Asimov :)')
+    mensagens = []
+    while True:
+        input_usuario  = input('User: ')
+        if input_usuario.lower() == 'sair':
+            break
+
+        mensagens.append({"role": "user", "content": input_usuario})
+        #chama o modelo
+        mensagens = geracao_texto(mensagens=mensagens)
