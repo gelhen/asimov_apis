@@ -12,15 +12,15 @@ client = openai.Client()
 def obter_temperatura_atual(local, unidade="celsius"):
     if "são paulo" in local.lower():
         return json.dumps(
-            {"local": "São Paulo", "temperatura": "32", "unidade": unidade}
+            {"local": "São Paulo", "temperatura": "32", "unidade": unidade}, ensure_ascii=False
             )
     elif "porto alegre" in local.lower():
         return json.dumps(
-            {"local": "Porto Alegre", "temperatura": "25", "unidade": unidade}
+            {"local": "Porto Alegre", "temperatura": "25", "unidade": unidade}, ensure_ascii=False
             )
     elif "rio de janeiro" in local.lower():
         return json.dumps(
-            {"local": "Rio de Janeiro", "temperatura": "35", "unidade": unidade}
+            {"local": "Rio de Janeiro", "temperatura": "35", "unidade": unidade}, ensure_ascii=False
             )
     else:
         return json.dumps(
@@ -28,7 +28,11 @@ def obter_temperatura_atual(local, unidade="celsius"):
             )
 
 
-
+# uma lista de dicionarios, pois o modelo permite que envie mais de uma
+# no funcion.name tem que ser um nome sugestivo para que o modelo possa identificar mais facilmente
+# mesmo para a funcion.description
+# funciton.enum significa que só pode ter os valores contidos no enum
+# funciton.required quais parametros sao obrigatorios
 tools = [
     {
         "type": "function",
@@ -61,18 +65,20 @@ mensagens = [
     {"role": "user",
      "content": "Qual é a temperatura em São Paulo e Porto Alegre?"}
     ]
-
+#chama o chat completions do modelo
 resposta = client.chat.completions.create(
     model="gpt-3.5-turbo-0125",
     messages=mensagens,
-    tools=tools,
+    tools=tools, # ferramentas para o Modelo utilizar
     tool_choice="auto",
 )
 
+#pega a mensagem resposta, ate este momento a função ainda não foi executada
+# o modelo retorna que precisa rodar duas vezes  a funcion, uma para uma São Pauslo e outra para Porto Alegre
 mensagem_resp = resposta.choices[0].message
-# me respondeu e avisa se precisa rodar alguma função
+# me respondeu e avisa se precisa rodar alguma fun
 tool_calls = mensagem_resp.tool_calls
-
+# ai ver se precia rodar algua tool
 if tool_calls:
     mensagens.append(mensagem_resp)
     for tool_call in tool_calls:
