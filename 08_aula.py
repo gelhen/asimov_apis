@@ -78,6 +78,7 @@ resposta = client.chat.completions.create(
 mensagem_resp = resposta.choices[0].message
 # me respondeu e avisa se precisa rodar alguma fun
 tool_calls = mensagem_resp.tool_calls
+# se não retornar nada para o tool_calls é porque o modelo não precisou e já trouxe o retorno que precisava
 # ai ver se precia rodar algua tool
 if tool_calls:
     mensagens.append(mensagem_resp)
